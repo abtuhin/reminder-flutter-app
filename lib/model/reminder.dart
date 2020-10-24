@@ -11,7 +11,7 @@ class Reminder {
   factory Reminder.fromJson(Map<String, dynamic> jsonData) {
     return Reminder(
       id: jsonData['id'],
-      dateTime: jsonData['dateTime'],
+      dateTime: DateTime.parse(jsonData['dateTime']),
       repetition: jsonData['repetition'],
       isActive: jsonData['isActive'],
     );
