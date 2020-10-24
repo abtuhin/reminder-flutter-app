@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:reminder_app/model/reminder.dart';
+import 'package:uuid/uuid.dart';
 
 class AddReminder extends StatefulWidget {
   @override
@@ -9,8 +12,8 @@ class AddReminder extends StatefulWidget {
 class _State extends State<AddReminder> {
   final GlobalKey _menuKey = new GlobalKey();
   String schedule = 'NOT SELECTED';
-  String startDate = '01-10-2020';
-  String reminderTime = 'NOT SELECTED';
+  DateTime _date = DateTime.now();
+  DateTime _time;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +44,18 @@ class _State extends State<AddReminder> {
           state.showButtonMenu();
         });
 
+    void _onAddReminder() {
+      DateTime _dateTime = _time ??
+          new DateTime(_date.year, _date.month, _date.day, DateTime.now().hour,
+              DateTime.now().minute);
+      Reminder reminder = new Reminder();
+      reminder.id = Uuid().v1();
+      reminder.dateTime = _dateTime;
+      reminder.repetition = schedule;
+      reminder.isActive = true;
+      Navigator.pop(context, reminder);
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: Text('Add Reminder'),
@@ -69,11 +84,7 @@ class _State extends State<AddReminder> {
                                 TextStyle(color: Colors.white, fontSize: 16)),
                         onChanged: (date) {}, onConfirm: (date) {
                       setState(() {
-                        startDate = date.day.toString() +
-                            '-' +
-                            date.month.toString() +
-                            '-' +
-                            date.year.toString();
+                        _date = date;
                       });
                     }, currentTime: DateTime.now(), locale: LocaleType.en);
                   },
@@ -89,13 +100,9 @@ class _State extends State<AddReminder> {
                         onChanged: (date) {
                       print('change $date in time zone ' +
                           date.timeZoneOffset.inHours.toString());
-                    }, onConfirm: (date) {
+                    }, onConfirm: (time) {
                       setState(() {
-                        reminderTime = date.hour.toString() +
-                            ':' +
-                            date.minute.toString() +
-                            ':' +
-                            date.second.toString();
+                        _time = time;
                       });
                     }, currentTime: DateTime.now());
                   },
@@ -108,14 +115,15 @@ class _State extends State<AddReminder> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: Text(startDate),
+                      title: Text(" ${DateFormat('yyyy-MM-dd').format(_date)}"),
                       leading: Icon(
                         Icons.date_range,
                         color: Colors.lightGreen[500],
                       ),
                     ),
                     ListTile(
-                      title: Text(reminderTime),
+                      title: Text(
+                          " ${DateFormat('HH:mm').format(_time ?? DateTime.now())}"),
                       leading: Icon(
                         Icons.schedule,
                         color: Colors.lightGreen[500],
@@ -127,6 +135,12 @@ class _State extends State<AddReminder> {
                         Icons.alarm,
                         color: Colors.lightGreen[500],
                       ),
+                    ),
+                    RaisedButton(
+                      color: Colors.lightGreen,
+                      textColor: Colors.white,
+                      onPressed: _onAddReminder,
+                      child: Text("Add"),
                     ),
                   ],
                 ),
