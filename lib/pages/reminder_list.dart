@@ -18,15 +18,20 @@ class _State extends State<ReminderList> {
     _getStorageData();
   }
 
+  void _syncStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('reminder_app', Reminder.encodeReminders(_reminders));
+  }
+
   _getStorageData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print('asdkjl');
-    print(prefs);
-    final List<Reminder> decodedData =
-        Reminder.decodeReminders(prefs.getString('reminder_app'));
-    setState(() {
-      _reminders = decodedData;
-    });
+    if (prefs != null) {
+      final List<Reminder> decodedData =
+          Reminder.decodeReminders(prefs.getString('reminder_app'));
+      setState(() {
+        _reminders = decodedData;
+      });
+    }
   }
 
   @override
@@ -35,19 +40,33 @@ class _State extends State<ReminderList> {
       try {
         final data = await Navigator.push(context,
             new MaterialPageRoute(builder: (context) => new AddReminder()));
+        if (data != null) {
+          setState(() {
+            _reminders.add(data);
+          });
 
-        setState(() {
-          _reminders.add(data);
-        });
-
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('reminder_app', Reminder.encodeReminders(_reminders));
+          _syncStorage();
+        }
       } catch (e) {
         print(e);
       }
     }
 
-    print(_reminders.length);
+    void _toggleReminder(String id) {
+      var reminder = _reminders.firstWhere((element) => element.id == id);
+      setState(() {
+        reminder.isActive = !reminder.isActive;
+      });
+      _syncStorage();
+    }
+
+    void _updateFrequency(String id, String repetition) {
+      setState(() {
+        _reminders.firstWhere((element) => element.id == id).repetition =
+            repetition;
+      });
+      _syncStorage();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +92,7 @@ class _State extends State<ReminderList> {
                             trailing: Switch(
                               value: _reminders[index].isActive,
                               onChanged: (_) {
-                                // _toggleReminder(_reminders[index].id);
+                                _toggleReminder(_reminders[index].id);
                               },
                             ),
                           ),
@@ -83,8 +102,8 @@ class _State extends State<ReminderList> {
                                 value: 'DAILY',
                                 groupValue: _reminders[index].repetition,
                                 onChanged: (_) {
-                                  // _updateFrequency(_reminders[index].id,
-                                  //     Repetition.daily);
+                                  _updateFrequency(
+                                      _reminders[index].id, 'DAILY');
                                 },
                               ),
                               Text(
@@ -95,8 +114,8 @@ class _State extends State<ReminderList> {
                                 value: 'WEEKLY',
                                 groupValue: _reminders[index].repetition,
                                 onChanged: (_) {
-                                  // _updateFrequency(_reminders[index].id,
-                                  //     Repetition.weekly);
+                                  _updateFrequency(
+                                      _reminders[index].id, 'WEEKLY');
                                 },
                               ),
                               Text(
@@ -109,12 +128,26 @@ class _State extends State<ReminderList> {
                                 value: 'MONTHLY',
                                 groupValue: _reminders[index].repetition,
                                 onChanged: (_) {
-                                  // _updateFrequency(_reminders[index].id,
-                                  //     Repetition.monthly);
+                                  _updateFrequency(
+                                      _reminders[index].id, 'MONTHLY');
                                 },
                               ),
                               Text(
                                 'Monthly',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                              Radio(
+                                value: 'YEARLY',
+                                groupValue: _reminders[index].repetition,
+                                onChanged: (_) {
+                                  _updateFrequency(
+                                      _reminders[index].id, 'YEARLY');
+                                },
+                              ),
+                              Text(
+                                'Yearly',
                                 style: TextStyle(
                                   fontSize: 16.0,
                                 ),
