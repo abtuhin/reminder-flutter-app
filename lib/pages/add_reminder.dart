@@ -25,34 +25,6 @@ class _State extends State<AddReminder> {
 
   @override
   Widget build(BuildContext context) {
-    /// Populate [PopulateMenuItem] for [PopupMenu].
-    final button = new PopupMenuButton(
-        key: _menuKey,
-        itemBuilder: (_) => <PopupMenuItem<String>>[
-              new PopupMenuItem<String>(
-                  child: const Text('DAILY'), value: 'DAILY'),
-              new PopupMenuItem<String>(
-                  child: const Text('WEEKLY'), value: 'WEEKLY'),
-              new PopupMenuItem<String>(
-                  child: const Text('MONTHLY'), value: 'MONTHLY'),
-            ],
-        onSelected: (val) {
-          setState(() {
-            schedule = val;
-          });
-        });
-
-    /// [PopupMenu] that will open [PopupMenuItems] on tap.
-    final tile = new ListTile(
-        tileColor: Colors.lightGreen,
-        title: new Text('Select Repetition Cycle',
-            style: TextStyle(color: Colors.white)),
-        trailing: button,
-        onTap: () {
-          dynamic state = _menuKey.currentState;
-          state.showButtonMenu();
-        });
-
     /// Return [false] with error message if [dateTime] is invalid.
     /// Return [false] with error message if [repetition] is set to [NOT SELECTED].
     /// Returns [true] otherwise.
@@ -83,6 +55,37 @@ class _State extends State<AddReminder> {
       }
     }
 
+    /// Populate [PopulateMenuItem] for [PopupMenu].
+    final button = new PopupMenuButton(
+        key: _menuKey,
+        itemBuilder: (_) => <PopupMenuItem<String>>[
+              new PopupMenuItem<String>(
+                  child: const Text('DAILY'), value: 'DAILY'),
+              new PopupMenuItem<String>(
+                  child: const Text('WEEKLY'), value: 'WEEKLY'),
+              new PopupMenuItem<String>(
+                  child: const Text('MONTHLY'), value: 'MONTHLY'),
+            ],
+        onSelected: (val) {
+          setState(() {
+            schedule = val;
+          });
+        });
+
+    /// [PopupMenu] that will open [PopupMenuItems] on tap.
+    final tile = new Card(
+        elevation: 4.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        child: new ListTile(
+            tileColor: Colors.lightGreen,
+            title: new Text('Select Repetition Cycle',
+                style: TextStyle(color: Colors.white)),
+            trailing: button,
+            onTap: () {
+              dynamic state = _menuKey.currentState;
+              state.showButtonMenu();
+            }));
+
     return Scaffold(
         key: _scafoldKey,
         appBar: AppBar(
@@ -93,64 +96,72 @@ class _State extends State<AddReminder> {
             padding: const EdgeInsets.all(16.0),
             child: Container(
               child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  RaisedButton(
-                      color: Colors.lightGreen,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                      elevation: 4.0,
-                      onPressed: () {
-                        DatePicker.showDatePicker(context,
-                            showTitleActions: true,
-                            minTime: DateTime.now(),
-                            theme: DatePickerTheme(
-                                headerColor: Colors.green,
-                                backgroundColor: Colors.lightGreen,
-                                itemStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18),
-                                cancelStyle: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                                doneStyle: TextStyle(
-                                    color: Colors.white, fontSize: 16)),
-                            onChanged: (date) {}, onConfirm: (date) {
-                          setState(() {
-                            _date = date;
-                          });
-                        }, currentTime: DateTime.now(), locale: LocaleType.en);
-                      },
-                      child: Text(
-                        'Select Start Date',
-                        style: TextStyle(color: Colors.white),
-                      )),
                   SizedBox(
-                    height: 20.0,
+                    width: double.infinity,
+                    height: 50.0,
+                    child: RaisedButton(
+                        color: Colors.lightGreen,
+                        textColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                        elevation: 4.0,
+                        onPressed: () {
+                          DatePicker.showDatePicker(context,
+                              showTitleActions: true,
+                              minTime: DateTime.now(),
+                              theme: DatePickerTheme(
+                                  headerColor: Colors.green,
+                                  backgroundColor: Colors.lightGreen,
+                                  itemStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                  cancelStyle: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                  doneStyle: TextStyle(
+                                      color: Colors.white, fontSize: 16)),
+                              onChanged: (date) {}, onConfirm: (date) {
+                            setState(() {
+                              _date = date;
+                            });
+                          },
+                              currentTime: DateTime.now(),
+                              locale: LocaleType.en);
+                        },
+                        child: Text(
+                          'Select Start Date',
+                          style: TextStyle(color: Colors.white),
+                        )),
                   ),
-                  RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                      elevation: 4.0,
-                      color: Colors.lightGreen,
-                      textColor: Colors.white,
-                      onPressed: () {
-                        DatePicker.showTimePicker(context,
-                            showTitleActions: true, onChanged: (date) {
-                          print('change $date in time zone ' +
-                              date.timeZoneOffset.inHours.toString());
-                        }, onConfirm: (time) {
-                          setState(() {
-                            _time = time;
-                          });
-                        }, currentTime: DateTime.now());
-                      },
-                      child: Text(
-                        'Select Reminder Time',
-                        style: TextStyle(color: Colors.white),
-                      )),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50.0,
+                    child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                        elevation: 4.0,
+                        color: Colors.lightGreen,
+                        textColor: Colors.white,
+                        onPressed: () {
+                          DatePicker.showTimePicker(context,
+                              showTitleActions: true, onChanged: (date) {
+                            print('change $date in time zone ' +
+                                date.timeZoneOffset.inHours.toString());
+                          }, onConfirm: (time) {
+                            setState(() {
+                              _time = time;
+                            });
+                          }, currentTime: DateTime.now());
+                        },
+                        child: Text(
+                          'Select Reminder Time',
+                          style: TextStyle(color: Colors.white),
+                        )),
+                  ),
                   SizedBox(
                     height: 20.0,
                   ),
@@ -159,6 +170,9 @@ class _State extends State<AddReminder> {
                     height: 20.0,
                   ),
                   Card(
+                    elevation: 4.0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0)),
                     child: Column(
                       children: [
                         ListTile(
@@ -187,17 +201,19 @@ class _State extends State<AddReminder> {
                       ],
                     ),
                   ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0)),
-                    elevation: 4.0,
-                    color: Colors.lightGreen,
-                    textColor: Colors.white,
-                    onPressed: _onAddReminder,
-                    child: Text("Add"),
-                  ),
+                  SizedBox(height: 20.0),
                   SizedBox(
-                    height: 20.0,
+                    width: double.infinity,
+                    height: 50.0,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0)),
+                      elevation: 4.0,
+                      color: Colors.lightGreen,
+                      textColor: Colors.white,
+                      onPressed: _onAddReminder,
+                      child: Text("Add"),
+                    ),
                   ),
                 ],
               ),
