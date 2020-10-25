@@ -77,10 +77,19 @@ class _State extends State<AddReminder> {
         elevation: 4.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         child: new ListTile(
+            leading: Icon(
+              Icons.repeat,
+              color: Colors.white,
+            ),
             tileColor: Colors.lightGreen,
-            title: new Text('Select Repetition Cycle',
-                style: TextStyle(color: Colors.white)),
-            trailing: button,
+            title: new Center(
+                child: new Text('Select Repetition Cycle',
+                    style: TextStyle(color: Colors.white))),
+            trailing: IconButton(
+                icon: Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            )),
             onTap: () {
               dynamic state = _menuKey.currentState;
               state.showButtonMenu();
@@ -177,25 +186,41 @@ class _State extends State<AddReminder> {
                       children: [
                         ListTile(
                           title: Text(
-                              " ${DateFormat('yyyy-MM-dd').format(_date)}"),
+                            " ${DateFormat('yyyy-MM-dd').format(_date)}",
+                            style: new TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18.0,
+                                color: Colors.black45),
+                          ),
                           leading: Icon(
                             Icons.date_range,
-                            color: Colors.lightGreen[500],
+                            color: Colors.lightGreen,
                           ),
                         ),
                         ListTile(
                           title: Text(
-                              " ${DateFormat('HH:mm').format(_time ?? DateTime.now())}"),
+                            " ${DateFormat('HH:mm').format(_time ?? DateTime.now())}",
+                            style: new TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18.0,
+                                color: Colors.black45),
+                          ),
                           leading: Icon(
                             Icons.schedule,
-                            color: Colors.lightGreen[500],
+                            color: Colors.lightGreen,
                           ),
                         ),
                         ListTile(
-                          title: Text(schedule),
+                          title: Text(
+                            schedule,
+                            style: new TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18.0,
+                                color: Colors.black45),
+                          ),
                           leading: Icon(
                             Icons.alarm,
-                            color: Colors.lightGreen[500],
+                            color: Colors.lightGreen,
                           ),
                         ),
                       ],

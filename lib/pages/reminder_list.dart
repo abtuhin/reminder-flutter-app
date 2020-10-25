@@ -107,7 +107,11 @@ class _State extends State<ReminderList> {
                           ListTile(
                             onTap: () {},
                             title: Text(
-                                "${DateFormat('dd-MM-yyyy hh:mm').format(_reminders[index].dateTime)}"),
+                                "${DateFormat('dd-MM-yyyy hh:mm a').format(_reminders[index].dateTime)}",
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20.0,
+                                    color: Colors.black45)),
                             trailing: Switch(
                               activeColor: Colors.lightGreen,
                               value: _reminders[index].isActive,
@@ -127,10 +131,11 @@ class _State extends State<ReminderList> {
                                       _reminders[index].id, 'DAILY');
                                 },
                               ),
-                              Text(
-                                'Daily',
-                                style: TextStyle(fontSize: 16.0),
-                              ),
+                              Text('Daily',
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16.0,
+                                      color: Colors.black45)),
                               Radio(
                                 activeColor: Colors.lightGreen,
                                 value: 'WEEKLY',
@@ -140,12 +145,11 @@ class _State extends State<ReminderList> {
                                       _reminders[index].id, 'WEEKLY');
                                 },
                               ),
-                              Text(
-                                'Weekly',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
+                              Text('Weekly',
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16.0,
+                                      color: Colors.black45)),
                               Radio(
                                 activeColor: Colors.lightGreen,
                                 value: 'MONTHLY',
@@ -157,9 +161,10 @@ class _State extends State<ReminderList> {
                               ),
                               Text(
                                 'Monthly',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.0,
+                                    color: Colors.black45),
                               ),
                             ],
                           ),
