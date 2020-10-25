@@ -10,7 +10,13 @@ class ReminderList extends StatefulWidget {
 }
 
 class _State extends State<ReminderList> {
+  final GlobalKey<ScaffoldState> _scafoldKey = new GlobalKey<ScaffoldState>();
   List<Reminder> _reminders = [];
+
+  void _showMessage(String text) {
+    final snackbar = new SnackBar(content: new Text(text));
+    _scafoldKey.currentState.showSnackBar(snackbar);
+  }
 
   @override
   void initState() {
@@ -44,8 +50,8 @@ class _State extends State<ReminderList> {
           setState(() {
             _reminders.add(data);
           });
-
           _syncStorage();
+          _showMessage("Success! You have added a new reminder.");
         }
       } catch (e) {
         print(e);
@@ -69,9 +75,10 @@ class _State extends State<ReminderList> {
     }
 
     return Scaffold(
+      key: _scafoldKey,
       appBar: AppBar(
         title: Text('Reminders'),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.lightGreen,
       ),
       body: Container(
         child: ListView.builder(
@@ -90,6 +97,7 @@ class _State extends State<ReminderList> {
                             title: Text(
                                 "${DateFormat('dd-MM-yyyy hh:mm').format(_reminders[index].dateTime)}"),
                             trailing: Switch(
+                              activeColor: Colors.lightGreen,
                               value: _reminders[index].isActive,
                               onChanged: (_) {
                                 _toggleReminder(_reminders[index].id);
@@ -99,6 +107,7 @@ class _State extends State<ReminderList> {
                           Row(
                             children: <Widget>[
                               Radio(
+                                activeColor: Colors.lightGreen,
                                 value: 'DAILY',
                                 groupValue: _reminders[index].repetition,
                                 onChanged: (_) {
@@ -111,6 +120,7 @@ class _State extends State<ReminderList> {
                                 style: TextStyle(fontSize: 16.0),
                               ),
                               Radio(
+                                activeColor: Colors.lightGreen,
                                 value: 'WEEKLY',
                                 groupValue: _reminders[index].repetition,
                                 onChanged: (_) {
@@ -125,6 +135,7 @@ class _State extends State<ReminderList> {
                                 ),
                               ),
                               Radio(
+                                activeColor: Colors.lightGreen,
                                 value: 'MONTHLY',
                                 groupValue: _reminders[index].repetition,
                                 onChanged: (_) {
@@ -134,20 +145,6 @@ class _State extends State<ReminderList> {
                               ),
                               Text(
                                 'Monthly',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                              Radio(
-                                value: 'YEARLY',
-                                groupValue: _reminders[index].repetition,
-                                onChanged: (_) {
-                                  _updateFrequency(
-                                      _reminders[index].id, 'YEARLY');
-                                },
-                              ),
-                              Text(
-                                'Yearly',
                                 style: TextStyle(
                                   fontSize: 16.0,
                                 ),
@@ -170,7 +167,7 @@ class _State extends State<ReminderList> {
         },
         tooltip: 'Add Reminder',
         child: Icon(Icons.add),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.lightGreen,
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
