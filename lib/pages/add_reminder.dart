@@ -17,6 +17,7 @@ class _State extends State<AddReminder> {
   DateTime _date = DateTime.now();
   DateTime _time;
 
+  /// Show snackbar message that passed to it as [text].
   void _showErrorMessage(String text) {
     final snackbar = new SnackBar(content: new Text(text));
     _scafoldKey.currentState.showSnackBar(snackbar);
@@ -24,6 +25,7 @@ class _State extends State<AddReminder> {
 
   @override
   Widget build(BuildContext context) {
+    /// Populate [PopulateMenuItem] for [PopupMenu].
     final button = new PopupMenuButton(
         key: _menuKey,
         itemBuilder: (_) => <PopupMenuItem<String>>[
@@ -40,6 +42,7 @@ class _State extends State<AddReminder> {
           });
         });
 
+    /// [PopupMenu] that will open [PopupMenuItems] on tap.
     final tile = new ListTile(
         tileColor: Colors.lightGreen,
         title: new Text('Select Repetition Cycle',
@@ -50,6 +53,9 @@ class _State extends State<AddReminder> {
           state.showButtonMenu();
         });
 
+    /// Return [false] with error message if [dateTime] is invalid.
+    /// Return [false] with error message if [repetition] is set to [NOT SELECTED].
+    /// Returns [true] otherwise.
     bool _isValid(Reminder reminder) {
       if (reminder.dateTime == null) {
         _showErrorMessage('Select date and time.');
@@ -61,6 +67,8 @@ class _State extends State<AddReminder> {
       return true;
     }
 
+    /// Create new instance of [Reminder].
+    /// Popped current screen for valid [Reminder].
     void _onAddReminder() {
       DateTime _dateTime = _time ??
           new DateTime(_date.year, _date.month, _date.day, DateTime.now().hour,

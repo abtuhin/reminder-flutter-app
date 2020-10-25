@@ -13,22 +13,26 @@ class _State extends State<ReminderList> {
   final GlobalKey<ScaffoldState> _scafoldKey = new GlobalKey<ScaffoldState>();
   List<Reminder> _reminders = [];
 
-  void _showMessage(String text) {
-    final snackbar = new SnackBar(content: new Text(text));
-    _scafoldKey.currentState.showSnackBar(snackbar);
-  }
-
   @override
   void initState() {
     super.initState();
     _getStorageData();
   }
 
+  /// Show snackbar message that passed to it as [text].
+  void _showMessage(String text) {
+    final snackbar = new SnackBar(content: new Text(text));
+    _scafoldKey.currentState.showSnackBar(snackbar);
+  }
+
+  /// Sync shared preference with updated data.
   void _syncStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('reminder_app', Reminder.encodeReminders(_reminders));
   }
 
+  /// Update state with repetition cycle
+  /// Call sync storage function
   _getStorageData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs != null) {
@@ -42,6 +46,10 @@ class _State extends State<ReminderList> {
 
   @override
   Widget build(BuildContext context) {
+    /// Callback returns with data from [AddReminder] screen when new reminder added.
+    /// Callback return null if goes back from [AddReminder] screen.
+    /// Add new data to shared preferences.
+    /// Show snackbar when new reminder added.
     _navigateAndGetReminder(BuildContext context) async {
       try {
         final data = await Navigator.push(context,
@@ -58,6 +66,8 @@ class _State extends State<ReminderList> {
       }
     }
 
+    /// Toggle reminder state for a reminder with [id].
+    /// Update shared prefernces with updated toggle value.
     void _toggleReminder(String id) {
       var reminder = _reminders.firstWhere((element) => element.id == id);
       setState(() {
@@ -66,6 +76,8 @@ class _State extends State<ReminderList> {
       _syncStorage();
     }
 
+    /// Update reminder state with updated repetition cycle with [id] and [repetition] as params.
+    /// Update shared preferences with updated repetition cycle.
     void _updateFrequency(String id, String repetition) {
       setState(() {
         _reminders.firstWhere((element) => element.id == id).repetition =
