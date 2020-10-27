@@ -85,12 +85,9 @@ class _State extends State<AddReminder> {
             title: new Center(
                 child: new Text('Select Repetition Cycle',
                     style: TextStyle(color: Colors.white))),
-            trailing: IconButton(
-                icon: Icon(
-              Icons.more_vert,
-              color: Colors.white,
-            )),
+            trailing: button,
             onTap: () {
+              print('asjkdhasjkdhkjas');
               dynamic state = _menuKey.currentState;
               state.showButtonMenu();
             }));
